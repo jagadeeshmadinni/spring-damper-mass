@@ -1,23 +1,29 @@
 % Mass-spring-damper parameters starting with the values from
 % ctms.engin.umich.edu state space model
 m = 1; % Mass = 1.0 kg
-k = 1; % Spring constant = 1.0 N/m
+%k = 1; % Spring constant = 1.0 N/m
 b = 0.2; % Damping constant = 0.2 Ns/m
 F = 1; % Input Force = 1.0 N
 
 
-tspan = [0 5];
-y_init = [0.1;0];
 
-[t,y] = ode45(@springDamperResponse,tspan, y_init);
-
-plot(t,y(:,1));
-grid on;
-xlabel("time");
-ylabel("Displacement")
-title("Displacement vs time");
-
-
-function Y = springDamperResponse(y)
-Y = [y(2);F/m-(b/m)*y(2)-(k/m)*y(1)];
+B = [0;1/m];
+C = [1 0];
+D = 0;
+t = 0:0.1:60;
+Z = zeros(601,91);
+for k = 1:0.1:10
+    i = int32((k-1)/0.1+1);
+    A = [0,1;-k/m,-b/m];
+    sys = ss(A,B,C,D);
+    Z(:,i)= step(sys,t);
 end 
+
+[X,Y] = meshgrid(1:0.1:10,t);
+fig = figure();
+surf(X,Y,Z)
+xlabel("Spring Constant-K(N/m)")
+ylabel("Time(s)")
+zlabel("Displacement(m)")
+saveas(fig,"Spring Parameter Plot.png")
+save("springParameters.mat","X","Y","Z")
