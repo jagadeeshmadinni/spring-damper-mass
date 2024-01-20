@@ -1,3 +1,4 @@
+clear vars;
 % Mass-spring-damper parameters starting with the values from
 % ctms.engin.umich.edu state space model
 m = 1; % Mass = 1.0 kg
@@ -11,14 +12,19 @@ B = [0;1/m];
 C = [1 0];
 D = 0;
 t = 0:0.1:60;
-Z = zeros(91,601);
-for k = 1:0.1:10
-    i = int32((k-1)/0.1+1);
+Z = zeros(601,201);
+for k = 0:5:1000
+    i = k/5+1;
     A = [0,1;-k/m,-b/m];
     sys = ss(A,B,C,D);
-    Z(i,:)= step(sys,t)';
+    Z(:,i)= step(sys,t);
 end 
 
-[X,Y] = meshgrid(1:0.1:10,t);
-surf(X,Y,Z')
-xlabel("Spring Constant k")
+[X,Y] = meshgrid(0:5:1000,t);
+fig = figure();
+surf(X,Y,Z)
+xlabel("Spring Constant-K(N/m)")
+ylabel("Time(s)")
+zlabel("Displacement(m)")
+%saveas(fig,"Spring Parameter Plot.png")
+%save("C:\Users\jmadinn\Documents\Jagadeesh\springParameters.mat","X","Y","Z")
