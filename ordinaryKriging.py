@@ -30,9 +30,9 @@ z, ss = OK.execute("grid", gridx, gridy)
 gridX,gridY = np.meshgrid(gridx,gridy) 
 #kt.write_asc_grid(gridx, gridy, z, filename="output.asc")
 
-#fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
-fig = plt.figure()
-ax = Axes3D(fig)
+fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+#fig = plt.figure()
+#ax = Axes3D(fig)
 surf = ax.plot_surface(gridX, gridY, z, cmap=cm.coolwarm,
                        linewidth=0, antialiased=False)
 #plt.imshow(z)

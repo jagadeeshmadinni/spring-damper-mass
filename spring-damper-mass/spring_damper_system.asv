@@ -12,19 +12,37 @@ B = [0;1/m];
 C = [1 0];
 D = 0;
 t = 0:0.1:60;
-Z = zeros(601,201);
-for k = 0:5:1000
-    i = k/5+1;
+
+
+springMax = 100;
+fineIncrement = 0.1;
+mediumIncrement = 1;
+coarseIncrement = 5;
+K = 0:fineIncrement:springMax;
+Z = zeros(,100);
+
+%Generate the source of truth by iterating over K with fineIncrement
+%interval
+
+for k = 0:fineIncrement:springMax
     A = [0,1;-k/m,-b/m];
     sys = ss(A,B,C,D);
-    Z(:,i)= step(sys,t);
+    Z(k,:)= step(sys,t);
 end 
 
-[X,Y] = meshgrid(0:5:1000,t);
+[X,Y] = meshgrid(t,);
+
 fig = figure();
 surf(X,Y,Z)
-xlabel("Spring Constant-K(N/m)")
-ylabel("Time(s)")
+ylabel("Spring Constant-K(N/m)")
+xlabel("Time(s)")
 zlabel("Displacement(m)")
+
 %saveas(fig,"Spring Parameter Plot.png")
 %save("C:\Users\jmadinn\Documents\Jagadeesh\springParameters.mat","X","Y","Z")
+
+%saveas(fig,"/home/jmadinn/ARM_Lab/Spring_Parameter_Plot.png")
+writematrix(springMax,'C:\Users\jmadinn\Documents\Jagadeesh\springParameters.csv');
+writematrix(t,'C:\Users\jmadinn\Documents\Jagadeesh\timesteps.csv');
+writematrix(Z,'C:\Users\jmadinn\Documents\Jagadeesh\displacement.csv');
+
