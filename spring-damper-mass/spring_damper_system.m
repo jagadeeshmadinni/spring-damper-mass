@@ -21,16 +21,24 @@ coarseIncrement = 5;
 fineK = 0.1:fineIncrement:springMax+0.1;
 coarseK = 0.1:coarseIncrement:springMax+0.1;
 mediumK = 0.1:mediumIncrement:springMax+0.1;
-fineZ = zeros(length(K),length(t));
+fineZ = zeros(length(fineK),length(t));
 
 %Generate the source of truth by iterating over K with fineIncrement
 %interval
 
-for i = 1:length(fineK)
+parfor i = 1:length(fineK)
     A = [0,1;-fineK(i)/m,-b/m];
+    in(i) = Simulink.SimulationInput('SimscapeSpringMass');
+    in(i) = setBlockParameter(in(i),'SimscapeSpringMass/Mass','mass',num2str(m));
+    in(i) = setBlockParameter(in(i),'SimscapeSpringMass/Translational Spring','spr_rate',num2str(fineK(i)));
+    in(i) = setBlockParameter(in(i),'SimscapeSpringMass/Translational Damper','D',num2str(b));
+    in(i) = setModelParameter(in(i),'StartTime','0','StopTime','60','FixedStep','0.1');
     sys = ss(A,B,C,D);
     fineZ(i,:)= step(sys,t);
 end 
+
+simOut = parsim(in, 'ShowSimulationManager', 'on');
+
 
 [X,Y] = meshgrid(t,fineK);
 

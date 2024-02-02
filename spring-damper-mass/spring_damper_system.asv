@@ -14,35 +14,44 @@ D = 0;
 t = 0:0.1:60;
 
 
-springMax = 100;
+springMax = 50;
 fineIncrement = 0.1;
 mediumIncrement = 1;
 coarseIncrement = 5;
-K = 0:fineIncrement:springMax;
-Z = zeros(,100);
+fineK = 0.1:fineIncrement:springMax+0.1;
+coarseK = 0.1:coarseIncrement:springMax+0.1;
+mediumK = 0.1:mediumIncrement:springMax+0.1;
+fineZ = zeros(length(fineK),length(t));
 
 %Generate the source of truth by iterating over K with fineIncrement
 %interval
 
-for k = 0:fineIncrement:springMax
-    A = [0,1;-k/m,-b/m];
+parfor i = 1:length(fineK)
+    A = [0,1;-fineK(i)/m,-b/m];
+    system_load
+    set_param('SimscapeSpringMass/Mass','mass',num2str(m))
+    set_param('SimscapeSpringMass/Translational Spring','spr_rate',num2str(fineK(i)))
+    set_param('SimscapeSpringMass/Translational Damper','D',num2str(b))
+    simOut = parsim('SimscapeSpringMass','StartTime','0','StopTime','60','FixedStep','0.1');
     sys = ss(A,B,C,D);
-    Z(k,:)= step(sys,t);
+    fineZ(i,:)= step(sys,t);
 end 
 
-[X,Y] = meshgrid(t,);
+[X,Y] = meshgrid(t,fineK);
 
 fig = figure();
-surf(X,Y,Z)
+surf(X,Y,fineZ)
 ylabel("Spring Constant-K(N/m)")
 xlabel("Time(s)")
 zlabel("Displacement(m)")
+
+
 
 %saveas(fig,"Spring Parameter Plot.png")
 %save("C:\Users\jmadinn\Documents\Jagadeesh\springParameters.mat","X","Y","Z")
 
 %saveas(fig,"/home/jmadinn/ARM_Lab/Spring_Parameter_Plot.png")
-writematrix(springMax,'C:\Users\jmadinn\Documents\Jagadeesh\springParameters.csv');
+writematrix(fineK,'C:\Users\jmadinn\Documents\Jagadeesh\fineSpringParameters.csv');
 writematrix(t,'C:\Users\jmadinn\Documents\Jagadeesh\timesteps.csv');
-writematrix(Z,'C:\Users\jmadinn\Documents\Jagadeesh\displacement.csv');
+writematrix(fineZ,'C:\Users\jmadinn\Documents\Jagadeesh\fineDisplacements.csv');
 
