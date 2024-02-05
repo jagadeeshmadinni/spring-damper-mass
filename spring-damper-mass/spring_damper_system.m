@@ -27,18 +27,21 @@ fineZ = zeros(length(fineK),length(t));
 %interval
 
 parfor i = 1:length(fineK)
-    A = [0,1;-fineK(i)/m,-b/m];
+    %A = [0,1;-fineK(i)/m,-b/m];
     in(i) = Simulink.SimulationInput('SimscapeSpringMass');
     in(i) = setBlockParameter(in(i),'SimscapeSpringMass/Mass','mass',num2str(m));
     in(i) = setBlockParameter(in(i),'SimscapeSpringMass/Translational Spring','spr_rate',num2str(fineK(i)));
     in(i) = setBlockParameter(in(i),'SimscapeSpringMass/Translational Damper','D',num2str(b));
     in(i) = setModelParameter(in(i),'StartTime','0','StopTime','60','FixedStep','0.1');
-    sys = ss(A,B,C,D);
-    fineZ(i,:)= step(sys,t);
+    %sys = ss(A,B,C,D);
+    %fineZ(i,:)= step(sys,t);
 end 
 
 simOut = parsim(in, 'ShowSimulationManager', 'on');
 
+parfor i = 1:length(fineK)
+    fineZ(i,:)= squeeze(simOut(i).displacement.Data)'
+end
 
 [X,Y] = meshgrid(t,fineK);
 
