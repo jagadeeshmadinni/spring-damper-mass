@@ -1,22 +1,22 @@
-Exploratory study of parametrizing the spring-mass-damper problem for Gaussian Process Regression
+**Exploratory study of parametrizing the spring-mass-damper problem for Gaussian Process Regression**
 
 This repo contains the matlab code, simscape and Simulink model, and the Jupyter notebook files to evaluate the interpolation performance of Gaussian Process Regression in system identification.
 
-What is Gaussian Process Regression?
+**What is Gaussian Process Regression?**
 
 Gaussian Process Regression (GPR) is a stochastic non-parametric technique used in modeling complex, non-linear relationships between variables. The objective of a GPR is to provide a probability distribution over functions that fit a known set of training points. A Gaussian Process is defined by a Mean and a Covariance function.
 
 Y(x)?GP(m(x),k(x, x?)), where m is the mean and k is the covariance function.
 
 The experiment is split into three tasks:
-1) Build a known system model ñ a simple mass-spring-damper system. This is an abstraction that allows us to translate the outcomes to any mechanical system that can be represented by a spring-mass-damper.
-2) Evaluate the system response to a standard input signal over a wide parameter range ñ The input signal is chosen to be a unit step response. The spring rate of the model is chosen as the parameter over which the model is varied. Evaluating the response for all possible parameters generates a source of truth to measure the performance of the GPR.
-3) Provide a portion of the system response as training data to the Gaussian Process Regressor, predict the response for the remaining ìtest dataî and evaluate the results against standard metrics.
+1) Build a known system model ‚Äì a simple mass-spring-damper system. This is an abstraction that allows us to translate the outcomes to any mechanical system that can be represented by a spring-mass-damper.
+2) Evaluate the system response to a standard input signal over a wide parameter range ‚Äì The input signal is chosen to be a unit step response. The spring rate of the model is chosen as the parameter over which the model is varied. Evaluating the response for all possible parameters generates a source of truth to measure the performance of the GPR.
+3) Provide a portion of the system response as training data to the Gaussian Process Regressor, predict the response for the remaining ‚Äútest data‚Äù and evaluate the results against standard metrics.
 
 The first two steps are conducted on a desktop computer with MATLAB Simscape and the Parallel Computing Toolbox. The third task is completed on a Linux based Compute cluster with access to an NVIDIA A100 GPU. The conda environment can be recreated with the yml file above.
 
 
-Procedure:
+**Procedure:**
 
 The MATLAB script spring_damper_system.m contains a state-space model of the spring-mass-damper system and generates the system response to a unit step input. This is now commented out in favor a scalable simscape model that is titled SimscapeSpringMass.slx. The intent is to be able to replace the mass-spring-damper with more complex models like a half-car or full-car model and still run the entire pipeline with minimal changes to the code. 
 
