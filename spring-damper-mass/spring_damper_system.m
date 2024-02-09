@@ -53,11 +53,8 @@ zlabel("Displacement(m)")
 
 
 
-%saveas(fig,"Spring Parameter Plot.png")
-%save("C:\Users\jmadinn\Documents\Jagadeesh\springParameters.mat","X","Y","Z")
-
-%saveas(fig,"/home/jmadinn/ARM_Lab/Spring_Parameter_Plot.png")
-writematrix(fineK,'C:\Users\jmadinn\Documents\Jagadeesh\fineSpringParameters.csv');
-writematrix(t,'C:\Users\jmadinn\Documents\Jagadeesh\timesteps.csv');
-writematrix(fineZ,'C:\Users\jmadinn\Documents\Jagadeesh\fineDisplacements.csv');
+%saveas(fig,"Spring_Parameter_Plot.png")
+%writematrix(fineK,fineSpringParameters.csv');
+%writematrix(t,timesteps.csv');
+%writematrix(fineZ,fineDisplacements.csv');
 
